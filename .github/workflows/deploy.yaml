@@ -1,0 +1,14 @@
+name : Deploy
+
+on : 
+  push:
+
+jobs :
+  deploy:
+    runs-on : ubuntu-latest
+    steps:
+      - name: checkout code
+        uses : action/checkout@latest
+      - run : docker build -t ${{secrets.DOCKER_HUB_USERNAME}}/test-docker .
+      - run : echo "${{secrets.DOCKER_HUB_PASSWORD}}" | docker login -u ${{secrets.DOCKER_HUB_USERNAME}} --pasword-stdin
+      - run : docker push ${{secrets.DOCKER_HUB_USERNAME}}/test-docker:latest
